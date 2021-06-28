@@ -1,0 +1,183 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0", 
+    "title": "Proof of Existence Manager",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    },
+    "contact": {
+      "name": "Agustin Mauras Velez",
+      "email": "agustinmaurasvelez@gmail.com",
+      "url": "https://www.linkedin.com/in/agustin-velez/"
+    }
+  },
+  "host": "localhost:3000",
+  "basePath": "/api",
+  "tags": [
+    { "name": "Stamp" },
+    { "name": "Verify" },
+    { "name": "Proofs" },
+    { "name": "Metrics" }
+  ],
+  "paths": {
+    "/stamp": { 
+      "post" : {
+        "tags": ["Stamp"],
+        "description": "Stamp a file on bitcoin blockchain",
+        "consumes": "multipart/form-data",
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "File that we want stamp",
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Stamped file",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/standar_response"
+                }
+              }
+            }
+          }
+        },
+        "produces": ["application/json"]
+      }
+    },
+    "/verify": { 
+      "get" : {
+        "tags": ["Verify"],
+        "description": "Verify a file that was stamped on bitcoin blockchain",
+        "parameters": [
+          {
+            "name": "hashes",
+            "in": "query",
+            "description": "Hashes of files that we want verify",
+            "type": "string",
+            "required": "true",
+            "example": "9748815223cb23d38b606f3bfde561a5c535da85ca879c8d1720daf465ecd843,e22ce4bbcd7129c5fac40b17aca78957366fbb3526696ca7f197a99c54434cb6"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verification result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/standar_response"
+                }
+              }
+            }
+          }
+        },
+        "produces": ["application/json"]
+      }
+    },
+    "/file_data": {
+      "get" : {
+        "tags": ["Proofs"],
+        "description": "Get data of files stamped",
+        "responses": {
+          "200": {
+            "description": "Files data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/standar_response"
+                }
+              }
+            }
+          }
+        },
+        "produces": ["application/json"]
+      }
+    },
+    "/proof": {
+      "get" : {
+        "tags": ["Proofs"],
+        "description": "Stamp a file on bitcoin blockchain",
+        "parameters": [
+          {
+            "name": "hashes",
+            "in": "query",
+            "description": "Hashes of files that we want the proof",
+            "type": "string",
+            "required": "true",
+            "example": "9748815223cb23d38b606f3bfde561a5c535da85ca879c8d1720daf465ecd843,e22ce4bbcd7129c5fac40b17aca78957366fbb3526696ca7f197a99c54434cb6"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Proof files",
+            "content": {
+              "application/zip": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "produces": ["application/zip"]
+      }
+    },
+    "/metrics": {
+      "get" : {
+        "tags": ["Metrics"],
+        "description": "Get metrics of stamps, verifications and proofs",
+        "parameters": [
+          {
+            "name": "group_by",
+            "in": "query",
+            "description": "Data bin time",
+            "type": "string",
+            "required": "false",
+            "example": "1d"
+          },
+          {
+            "name": "time_range",
+            "in": "query",
+            "description": "Range limiter in the past",
+            "type": "string",
+            "required": "false"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Files data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/standar_response"
+                }
+              }
+            }
+          }
+        },
+        "produces": ["application/json"]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "standar_response": {
+        "status": {
+          "type": "integer",
+          "description": "HTTP Status response"
+        },
+        "data": {
+          "type": "String"
+        }
+      }
+    }
+  },
+  "schemes": ["http"],
+  "consumes": ["application/json"]
+}
