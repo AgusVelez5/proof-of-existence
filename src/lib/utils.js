@@ -1,3 +1,4 @@
+const { x } = require("joi")
 
 const sleep = ms => new Promise(r => setTimeout(r, ms))
 
@@ -39,13 +40,15 @@ const hexToBytes = hex => {
 
 const log = (...args) => console.log(`${new Date().toISOString()} -`, ...args)
 
+const alphabetic_sort = (x, y) => x.file_name < y.file_name ? -1 : x.file_name > y.file_name ? 1 : 0
 
 module.exports = {
   sleep,
   retryablePromise,
   timeoutablePromise,
   hexToBytes,
-  log
+  log,
+  alphabetic_sort
 }
 
 

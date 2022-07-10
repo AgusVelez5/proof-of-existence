@@ -12,5 +12,6 @@ module.exports = {
   METRICS_GET_PROOF_TABLE: process.env.METRICS_GET_PROOF_TABLE,
   S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
   LOGS_PATH: process.env.LOGS_PATH,
-  DYNAMO_TABLE: process.env.DYNAMO_TABLE
+  DYNAMO_TABLE: process.env.DYNAMO_TABLE,
+  OTS_UPDATE_DELAY_MS: parseInt(process.env.OTS_UPDATE_DELAY_MS || '5000')
 }

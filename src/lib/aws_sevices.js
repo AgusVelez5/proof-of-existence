@@ -22,17 +22,37 @@ const save_file_data = async (hash, name, ts) => {
     Item: {
       "hash": hash,
       "name": name,
-      "stamp_timestamp": ts
+      "stamp_timestamp": ts,
+      "stamped": false
     }
   }
   await global.db.put(params).promise()
+}
+
+const update_file_data = async (hash, name, ts, stamped) => {
+  const params = {
+    TableName: DYNAMO_TABLE,
+    Key: {
+      "hash": hash
+    },
+    UpdateExpression: "set stamped = :s, #Name = :n, stamp_timestamp = :st",
+    ExpressionAttributeNames: {
+      "#Name": "name"
+  },
+    ExpressionAttributeValues:{
+        ":s": stamped,
+        ":n": name,
+        ":st": ts
+    }
+  }
+  await global.db.update(params).promise()
 }
 
 const get_file_data = async hash => {
   const params = {
     TableName: DYNAMO_TABLE,
     Key: {
-        "hash": hash
+      "hash": hash
     }
   }
   return (await global.db.get(params).promise()).Item
@@ -66,7 +86,7 @@ const upload_file_to_s3 = async (file_name, data) => {
   const params = {
       Bucket: S3_BUCKET_NAME, 
       Key: file_name, 
-      Body: data 
+      Body: data,
   }
   await global.s3.putObject(params).promise()
 }
@@ -140,6 +160,7 @@ const timestream_query = async config => {
 module.exports = {
   initAWS,
   save_file_data,
+  update_file_data,
   get_file_data,
   get_all_files_data,
   write_ts_records,

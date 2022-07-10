@@ -13,17 +13,17 @@ const getFileData = async (req, res) => {
 
 const getProof = async (req, res) => {
   if (typeof validator('hashes', req.query) === String)
-    return res.status(400).send(HTTP_STATUS["400"](validator('hash', req.query)))
+    return res.status(400).send(HTTP_STATUS(400, validator('hash', req.query)))
 
   const result = await ProofService(req.query.hashes)
 
   if (result.status === 200) {
     const readStream = new stream.PassThrough(),
-        buf = Buffer.from(result.data)
+          buf = Buffer.from(result.data)
 
     readStream.end(buf)
-    res.set('Content-disposition', 'attachment; filename=proof_files.zip');
-    res.set('Content-Type', 'text/plain');
+    res.set('Content-disposition', 'attachment; filename=proof_files.zip')
+    res.set('Content-Type', 'application/zip')
     readStream.pipe(res)
     return
   }
