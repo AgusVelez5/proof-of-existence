@@ -6,14 +6,12 @@ const sleep = ms => new Promise(r => setTimeout(r, ms))
 const m = async () => {
   initAWS()
   while (true) {
+    console.log('Checking for files to upgrade...')
     const files = await get_all_files_data(),
           pending_stamp_files = files.filter(f => f.stamped === false)
 
-        console.log('files', files)
-        console.log('pending_stamp_files', pending_stamp_files)
-        console.log('------')
-
     for (const file of pending_stamp_files) {
+      console.log(`Upgrading ${file.name}`)
       const ots = await download_file_from_s3(`${file.hash}.ots`)
       const detachedOts = OpenTimestamps.DetachedTimestampFile.deserialize(ots)
       
